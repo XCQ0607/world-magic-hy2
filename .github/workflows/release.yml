@@ -1,0 +1,60 @@
+name: Manual Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:       # 输入参数名
+        description: 'Release version (e.g. v25.12.2)' # 提示
+        required: false
+        default: ''   # 默认空，表示自动生成
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      # 1️⃣ 检出源码
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # 2️⃣ 设置 JDK 21
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 3️⃣ 构建
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # 4️⃣ 设置版本号：优先使用手动输入，否则自动生成
+      - name: Set version tag
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=v$(date +'%y.%-m.%-d')" >> $GITHUB_OUTPUT
+          fi
+
+      # 5️⃣ 创建 Release 并上传 jar
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "${{ steps.version.outputs.version }}"
+          body: |
+            🎉 自动构建发布
+  
+            🏷 构建版本：${{ steps.version.outputs.version }}
+
+            💻 构建环境：Temurin JDK 21
+  
+            ⚙️ 构建方式：mvn clean package -DskipTests
+          files: target/world-magic.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
