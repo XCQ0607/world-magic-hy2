@@ -113,6 +113,8 @@ public class Hy2ServiceImpl extends AbstractAppService {
                 appConfig.getDomain(), 
                 appConfig.getRemarksPrefix());
         
+        LogUtil.info("Hy2 Share Link: " + shareLink);
+        
         String base64Url = Base64.getEncoder().encodeToString(shareLink.getBytes(StandardCharsets.UTF_8));
         Path nodeFilePath = new File(this.getWorkDir(), appConfig.getUuid()).toPath();
         Files.write(nodeFilePath, Collections.singleton(base64Url));

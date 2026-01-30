@@ -16,7 +16,7 @@ password=hy2.Pwd
 # App 版本号
 app-version=2.6.0
 # 节点备注的前缀标识
-remarks-prefix=vevc
+remarks-prefix=XCQ
 ```
 
 ## 📢 使用说明与免责声明

@@ -63,7 +63,7 @@ public final class ConfigUtil {
         props.putIfAbsent(AppConst.PORT, "25565");
         props.putIfAbsent(AppConst.UUID, UUID.randomUUID().toString());
         props.putIfAbsent(AppConst.PASSWORD, UUID.randomUUID().toString().substring(0, 8));
-        props.putIfAbsent(AppConst.TUIC_VERSION, "1.6.5");
+        props.putIfAbsent(AppConst.APP_VERSION, "2.6.0");
         props.putIfAbsent(AppConst.REMARKS_PREFIX, "vevc");
     }
 
